@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anusha Upadhyayula — Storyteller</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0e0c0a;
+    --cream: #f5f0e8;
+    --warm: #f0e6d0;
+    --accent: #d94f2b;
+    --accent2: #f5a623;
+    --muted: #7a7060;
+    --serif: 'Playfair Display', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s;
+  }
+  body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 18px; height: 18px; }
+  body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width: 56px; height: 56px; }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.5;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 3rem;
+    mix-blend-mode: multiply;
+  }
+  .nav-logo {
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.15em;
+    color: var(--ink); text-transform: uppercase; text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    color: var(--muted); text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 3rem; padding-top: 8rem;
+    gap: 2rem; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--serif); font-size: clamp(120px, 18vw, 260px);
+    font-weight: 900; color: rgba(217,79,43,0.04);
+    white-space: nowrap; pointer-events: none; user-select: none;
+    letter-spacing: -0.04em; line-height: 1;
+  }
+  .hero-left { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 32px; height: 1px; background: var(--accent);
+  }
+  .hero-name {
+    font-family: var(--serif); font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 900; line-height: 0.95; letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .hero-name em { font-style: italic; color: var(--accent); }
+  .hero-title {
+    font-family: var(--serif); font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+    font-weight: 400; font-style: italic; color: var(--muted);
+    margin-bottom: 2.5rem; line-height: 1.3;
+  }
+  .hero-desc {
+    font-size: 1rem; line-height: 1.75; color: var(--ink);
+    max-width: 440px; margin-bottom: 3rem; font-weight: 300;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    background: var(--accent); color: white;
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.15em;
+    text-transform: uppercase; text-decoration: none;
+    padding: 1rem 2rem; border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: none;
+  }
+  .hero-cta:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--ink); }
+
+  .hero-right {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
+    gap: 1.5rem;
+  }
+  .hero-stat {
+    text-align: right;
+    border-right: 3px solid var(--accent); padding-right: 1.5rem;
+  }
+  .hero-stat-num {
+    font-family: var(--serif); font-size: 3rem; font-weight: 900;
+    line-height: 1; color: var(--ink);
+  }
+  .hero-stat-label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin-top: 0.25rem;
+  }
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em;
+    color: var(--muted); text-transform: uppercase; z-index: 2;
+  }
+  .scroll-line {
+    width: 1px; height: 48px; background: var(--muted);
+    animation: scrollPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.3); }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    background: var(--ink); overflow: hidden; padding: 1rem 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .marquee-track {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: marquee 24s linear infinite;
+  }
+  .marquee-track span {
+    font-family: var(--serif); font-size: 1rem; font-style: italic;
+    color: var(--cream); opacity: 0.6; padding: 0 2rem;
+  }
+  .marquee-track .dot {
+    color: var(--accent); opacity: 1; font-style: normal; padding: 0;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION SHARED */
+  section { padding: 6rem 3rem; }
+  .section-label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1rem;
+  }
+
+  /* ABOUT */
+  .about { background: var(--warm); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1.6fr; gap: 5rem; align-items: start; margin-top: 3rem;
+  }
+  .about-left {}
+  .about-quote {
+    font-family: var(--serif); font-size: 1.6rem; font-style: italic;
+    line-height: 1.45; color: var(--ink); margin-bottom: 2rem;
+    border-left: 3px solid var(--accent); padding-left: 1.5rem;
+  }
+  .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; border: 1px solid var(--ink);
+    padding: 0.35rem 0.8rem; color: var(--ink); background: transparent;
+  }
+  .about-right p {
+    font-size: 1rem; line-height: 1.85; color: var(--ink);
+    margin-bottom: 1.25rem; font-weight: 300;
+  }
+  .about-right strong { font-weight: 500; }
+
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+  .skill-item {
+    border-top: 1px solid var(--ink); padding-top: 0.75rem;
+  }
+  .skill-name {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem;
+  }
+  .skill-val { font-size: 0.9rem; font-weight: 400; }
+
+  /* FEATURED PROJECT */
+  .featured { background: var(--cream); }
+  .project-hero {
+    margin-top: 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+  }
+  .project-visual {
+    position: relative; aspect-ratio: 4/3;
+    background: var(--ink); overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .project-visual-inner {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1rem; padding: 2.5rem;
+    background: linear-gradient(135deg, #1a1510 0%, #0e0c0a 60%, #1e1008 100%);
+  }
+  .pv-title {
+    font-family: var(--serif); font-size: 2.2rem; font-weight: 900; font-style: italic;
+    color: var(--cream); text-align: center; line-height: 1.1; letter-spacing: -0.02em;
+  }
+  .pv-sub {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .pv-line { width: 60px; height: 1px; background: var(--accent); }
+  .pv-url {
+    font-family: var(--mono); font-size: 0.7rem; color: rgba(245,240,232,0.4);
+    letter-spacing: 0.1em;
+  }
+  .pv-dots {
+    position: absolute; bottom: 1rem; right: 1rem;
+    display: grid; grid-template-columns: repeat(5,8px); gap: 4px;
+  }
+  .pv-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(245,240,232,0.12); }
+  .pv-dot.active { background: var(--accent); }
+
+  .project-info {}
+  .project-type {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;
+  }
+  .project-name {
+    font-family: var(--serif); font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.25rem;
+  }
+  .project-desc {
+    font-size: 1rem; line-height: 1.8; color: var(--ink);
+    margin-bottom: 2rem; font-weight: 300;
+  }
+  .process-steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 2rem; }
+  .process-step {
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    padding: 1rem 0; border-bottom: 1px solid rgba(14,12,10,0.12);
+  }
+  .step-num {
+    font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
+    letter-spacing: 0.1em; min-width: 2rem; padding-top: 0.15rem;
+  }
+  .step-content {}
+  .step-title { font-weight: 500; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .step-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  .project-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent); color: white;
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; text-decoration: none;
+    padding: 0.85rem 1.75rem;
+    transition: transform 0.2s, box-shadow 0.2s; cursor: none;
+  }
+  .btn-primary:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--ink); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1.5px solid var(--ink); color: var(--ink);
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; text-decoration: none;
+    padding: 0.85rem 1.75rem;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s; cursor: none;
+  }
+  .btn-secondary:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--ink); background: var(--warm); }
+
+  /* IMPACT NUMBERS */
+  .impact { background: var(--ink); color: var(--cream); }
+  .impact .section-label { color: var(--accent2); }
+  .impact .section-label::before { background: var(--accent2); }
+  .impact .section-title { color: var(--cream); }
+  .impact-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
+    margin-top: 3.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .impact-item {
+    padding: 2.5rem 2rem; border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .impact-item:last-child { border-right: none; }
+  .impact-num {
+    font-family: var(--serif); font-size: 3.5rem; font-weight: 900;
+    line-height: 1; color: var(--accent); margin-bottom: 0.5rem;
+  }
+  .impact-label { font-size: 0.85rem; color: rgba(245,240,232,0.6); line-height: 1.5; }
+
+  /* EXPERIENCE */
+  .experience { background: var(--warm); }
+  .exp-list { margin-top: 3rem; }
+  .exp-item {
+    display: grid; grid-template-columns: 200px 1fr; gap: 3rem;
+    padding: 2rem 0; border-top: 1px solid rgba(14,12,10,0.15);
+    transition: background 0.2s;
+  }
+  .exp-item:last-child { border-bottom: 1px solid rgba(14,12,10,0.15); }
+  .exp-meta {}
+  .exp-date {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .exp-org { font-size: 0.85rem; font-weight: 500; }
+  .exp-loc { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+  .exp-content {}
+  .exp-role {
+    font-family: var(--serif); font-size: 1.2rem; font-weight: 700;
+    font-style: italic; margin-bottom: 0.6rem;
+  }
+  .exp-desc { font-size: 0.9rem; line-height: 1.75; color: var(--ink); font-weight: 300; }
+
+  /* MORE WORK */
+  .more-work { background: var(--cream); }
+  .placeholder-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
+  .placeholder-card {
+    border: 1.5px dashed rgba(14,12,10,0.2); padding: 2.5rem;
+    display: flex; flex-direction: column; gap: 1rem;
+    transition: border-color 0.2s, background 0.2s;
+    min-height: 220px;
+  }
+  .placeholder-card:hover { border-color: var(--accent); background: var(--warm); }
+  .ph-icon {
+    font-size: 1.5rem; width: 44px; height: 44px;
+    border: 1px solid rgba(14,12,10,0.2); display: flex; align-items: center; justify-content: center;
+  }
+  .ph-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; }
+  .ph-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .ph-tag {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em;
+    color: var(--accent); text-transform: uppercase; margin-top: auto;
+  }
+
+  /* CONTACT */
+  .contact { background: var(--ink); color: var(--cream); text-align: center; padding: 6rem 3rem; }
+  .contact .section-label { justify-content: center; color: var(--accent2); }
+  .contact .section-label::before { background: var(--accent2); }
+  .contact .section-title { color: var(--cream); margin-bottom: 1.5rem; }
+  .contact-sub {
+    font-family: var(--serif); font-size: 1.1rem; font-style: italic;
+    color: rgba(245,240,232,0.5); max-width: 500px; margin: 0 auto 3rem; line-height: 1.7;
+  }
+  .contact-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+  .contact-link {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--cream); text-decoration: none;
+    padding: 0.85rem 1.75rem; border: 1px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: border-color 0.2s, color 0.2s, background 0.2s; cursor: none;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); }
+  .contact-link.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .contact-link.primary:hover { background: transparent; color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center;
+  }
+  footer span { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .fade-in-delay-1 { transition-delay: 0.1s; }
+  .fade-in-delay-2 { transition-delay: 0.2s; }
+  .fade-in-delay-3 { transition-delay: 0.35s; }
+  .fade-in-delay-4 { transition-delay: 0.5s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    .hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 4rem; }
+    .hero-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    .hero-stat { text-align: left; border-right: none; border-left: 3px solid var(--accent); padding-right: 0; padding-left: 1.5rem; }
+    .about-grid, .project-hero { grid-template-columns: 1fr; gap: 2.5rem; }
+    .impact-grid { grid-template-columns: 1fr 1fr; }
+    .impact-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .placeholder-grid { grid-template-columns: 1fr; }
+    section { padding: 4rem 1.5rem; }
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">AU — Portfolio</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-text">Story</div>
+  <div class="hero-left">
+    <div class="hero-eyebrow fade-in">Content Design · UX · Journalism</div>
+    <h1 class="hero-name fade-in fade-in-delay-1">Anusha<br/><em>Upadhyayula</em></h1>
+    <p class="hero-title fade-in fade-in-delay-2">I find the story in everything.</p>
+    <p class="hero-desc fade-in fade-in-delay-3">
+      Informatics & Economics student at the University of Washington. I sit at the intersection of design, data, and narrative — turning complex systems into stories that move people to act.
+    </p>
+    <a href="#work" class="hero-cta fade-in fade-in-delay-4">
+      See My Work
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stat fade-in fade-in-delay-2">
+      <div class="hero-stat-num">700+</div>
+      <div class="hero-stat-label">People reached through<br/>cultural education</div>
+    </div>
+    <div class="hero-stat fade-in fade-in-delay-3">
+      <div class="hero-stat-num">1,500<span style="font-size:1.5rem">lbs</span></div>
+      <div class="hero-stat-label">Food waste reduced<br/>through platform work</div>
+    </div>
+    <div class="hero-stat fade-in fade-in-delay-4">
+      <div class="hero-stat-num">25</div>
+      <div class="hero-stat-label">Library branches<br/>served across Bay Area</div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Storytelling</span><span class="dot">✦</span>
+    <span>Content Design</span><span class="dot">✦</span>
+    <span>UX Research</span><span class="dot">✦</span>
+    <span>Information Architecture</span><span class="dot">✦</span>
+    <span>Journalism</span><span class="dot">✦</span>
+    <span>Community Impact</span><span class="dot">✦</span>
+    <span>Design Thinking</span><span class="dot">✦</span>
+    <span>Data Visualization</span><span class="dot">✦</span>
+    <span>Storytelling</span><span class="dot">✦</span>
+    <span>Content Design</span><span class="dot">✦</span>
+    <span>UX Research</span><span class="dot">✦</span>
+    <span>Information Architecture</span><span class="dot">✦</span>
+    <span>Journalism</span><span class="dot">✦</span>
+    <span>Community Impact</span><span class="dot">✦</span>
+    <span>Design Thinking</span><span class="dot">✦</span>
+    <span>Data Visualization</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label">About Me</div>
+  <div class="about-grid">
+    <div class="about-left">
+      <h2 class="section-title fade-in">The person<br/>behind the<br/><em style="font-style:italic;color:var(--accent)">words.</em></h2>
+      <blockquote class="about-quote fade-in fade-in-delay-1">
+        "I find stories even in the ordinary."
+      </blockquote>
+      <div class="about-tags fade-in fade-in-delay-2">
+        <span class="tag">Figma</span>
+        <span class="tag">SQL & Python</span>
+        <span class="tag">UX Research</span>
+        <span class="tag">Journalism</span>
+        <span class="tag">Public Speaking</span>
+        <span class="tag">Policy Research</span>
+        <span class="tag">Dashboard Design</span>
+        <span class="tag">Stakeholder Comms</span>
+      </div>
+    </div>
+    <div class="about-right">
+      <p class="fade-in">I'm a <strong>dual-degree student in Informatics & Economics</strong> at the University of Washington, and a proud member of the Lavin Entrepreneurship Program (selected 45 out of 270 applicants). I believe that the most powerful change happens when rigorous data meets human-centered storytelling.</p>
+      <p class="fade-in fade-in-delay-1">My work spans journalism, design, and civic technology. I've interviewed unhoused community members and nonprofit founders to <strong>surface stories the data can't tell alone</strong>. I've built platforms that redirected 1,500+ lbs of food. I've taken Bollywood dance to 25 public library branches. And I led a pulse oximeter bias research project as a Project Lead at UX Health Co:Lab.</p>
+      <p class="fade-in fade-in-delay-2">For me, great content isn't just well-written — it's <strong>architecturally sound, deeply empathetic, and built for the person reading it.</strong> That's what I bring to every project.</p>
+      <div class="skills-grid fade-in fade-in-delay-3">
+        <div class="skill-item">
+          <div class="skill-name">Education</div>
+          <div class="skill-val">UW — Informatics & Economics, '28</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Currently</div>
+          <div class="skill-val">Project Lead @ UX Health Co:Lab</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Based In</div>
+          <div class="skill-val">Seattle, WA (from San Jose, CA)</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Recognition</div>
+          <div class="skill-val">Recognized by Mayor Matt Mahan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PROJECT -->
+<section class="featured" id="work">
+  <div class="section-label">Featured Project</div>
+  <div class="project-hero">
+    <div class="project-visual fade-in">
+      <div class="project-visual-inner">
+        <div class="pv-sub">2023 — 2025</div>
+        <div class="pv-line"></div>
+        <div class="pv-title">Faces Behind<br/>the Numbers</div>
+        <div class="pv-line"></div>
+        <div class="pv-url">facesbehindthenumbers.com</div>
+      </div>
+      <div class="pv-dots">
+        <div class="pv-dot active"></div><div class="pv-dot active"></div><div class="pv-dot"></div>
+        <div class="pv-dot active"></div><div class="pv-dot"></div><div class="pv-dot"></div>
+        <div class="pv-dot"></div><div class="pv-dot active"></div><div class="pv-dot"></div>
+        <div class="pv-dot"></div><div class="pv-dot"></div><div class="pv-dot active"></div>
+        <div class="pv-dot active"></div><div class="pv-dot"></div><div class="pv-dot active"></div>
+      </div>
+    </div>
+    <div class="project-info">
+      <div class="project-type fade-in">Journalism · UX Design · Civic Tech</div>
+      <h3 class="project-name fade-in fade-in-delay-1">Giving data a human face — and a solution.</h3>
+      <p class="project-desc fade-in fade-in-delay-2">
+        California wastes over 11 billion pounds of food every year. Nearly 1 in 4 residents face food insecurity. I set out to understand <em>why</em> — not through statistics alone, but through the people living inside them. I interviewed a business owner, a nonprofit founder, and a food-insecure community member, then designed a systems-level solution.
+      </p>
+      <div class="process-steps fade-in fade-in-delay-3">
+        <div class="process-step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-title">Research & Field Interviews</div>
+            <div class="step-desc">Embedded with Hunger at Home at PayPal Park, San Jose. Interviewed Fred Galindez (80, food-insecure retiree), Ewell Sterner (nonprofit founder), and supply chain contacts at local businesses. Documented systemic barriers in food redistribution.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-title">Content Design & Narrative Framing</div>
+            <div class="step-desc">Translated qualitative interviews and policy research (SB 1383, USDA data, FDA date-labeling gaps) into accessible long-form stories for public and advocacy audiences.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-title">Solution Design — App + Physical Component</div>
+            <div class="step-desc">Designed a food surplus tracking platform: an app that automates matching of surplus food to nearby food recovery orgs, plus a physical pickup coordination layer. Drew on MTC internship experience building a similar Python/SQL system.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <div class="step-title">Publication & Impact</div>
+            <div class="step-desc">Published stories on facesbehindthenumbers.com; shared with advocacy organizations. Work demonstrated that content, when architecturally designed, can carry both emotional resonance and policy arguments.</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-links fade-in fade-in-delay-4">
+        <a href="https://www.facesbehindthenumbers.com" target="_blank" class="btn-primary">
+          Visit the Site
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#contact" class="btn-secondary">Discuss This Project</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section class="impact">
+  <div class="section-label">Impact at a Glance</div>
+  <h2 class="section-title fade-in">Numbers that<br/>tell their own story.</h2>
+  <div class="impact-grid">
+    <div class="impact-item fade-in">
+      <div class="impact-num">700+</div>
+      <div class="impact-label">Participants reached through BollyBE cultural education across 25 library branches</div>
+    </div>
+    <div class="impact-item fade-in fade-in-delay-1">
+      <div class="impact-num">1,500<span style="font-size:1.5rem">lbs</span></div>
+      <div class="impact-label">Food waste reduced via redistribution platform built at Metropolitan Transportation Commission</div>
+    </div>
+    <div class="impact-item fade-in fade-in-delay-2">
+      <div class="impact-num">75+</div>
+      <div class="impact-label">Patrons assisted weekly at San Jose Public Library with digital and government services</div>
+    </div>
+    <div class="impact-item fade-in fade-in-delay-3">
+      <div class="impact-num">12</div>
+      <div class="impact-label">Local restaurants connected to nonprofits through food redistribution platform in under 5 months</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="section-label">Experience</div>
+  <h2 class="section-title fade-in">Where I've<br/>done the work.</h2>
+  <div class="exp-list">
+    <div class="exp-item fade-in">
+      <div class="exp-meta">
+        <div class="exp-date">Dec 2025 – Present</div>
+        <div class="exp-org">UX Health Co:Lab</div>
+        <div class="exp-loc">University of Washington</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Project Lead</div>
+        <div class="exp-desc">Leading an interdisciplinary team of 10 to investigate bias in pulse oximeters and develop equitable solutions. Producing structured reports translating research for faculty and external audiences. Managing collaborative workflows across design and engineering.</div>
+      </div>
+    </div>
+    <div class="exp-item fade-in fade-in-delay-1">
+      <div class="exp-meta">
+        <div class="exp-date">Summer 2024</div>
+        <div class="exp-org">Metropolitan Transportation Commission</div>
+        <div class="exp-loc">San Francisco, CA</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Data & Research Intern</div>
+        <div class="exp-desc">Built a food redistribution platform in Python & SQL connecting 12 restaurants to nonprofits; reduced food waste by 1,500+ lbs in five months. Created policy dashboards used by senior leadership for funding and partnership strategy decisions.</div>
+      </div>
+    </div>
+    <div class="exp-item fade-in fade-in-delay-2">
+      <div class="exp-meta">
+        <div class="exp-date">2023 – 2025</div>
+        <div class="exp-org">Faces Behind the Numbers</div>
+        <div class="exp-loc">San Jose, CA</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Researcher & Journalist</div>
+        <div class="exp-desc">Conducted field interviews with community members and nonprofit leaders to document housing insecurity and food systems failures. Translated complex research into visual stories for public and advocacy audiences at facesbehindthenumbers.com.</div>
+      </div>
+    </div>
+    <div class="exp-item fade-in fade-in-delay-3">
+      <div class="exp-meta">
+        <div class="exp-date">Jan 2022 – Sep 2025</div>
+        <div class="exp-org">BollyBE</div>
+        <div class="exp-loc">Bay Area, CA</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Founder & Program Lead</div>
+        <div class="exp-desc">Founded and scaled a cultural education initiative reaching 700+ participants across 25 public library branches. Recognized by San Jose Mayor Matt Mahan; covered by The San Jose Blog, Tri City Voice, and SJPL. Built partnerships with city staff and community organizations.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MORE WORK -->
+<section class="more-work">
+  <div class="section-label">More Work</div>
+  <h2 class="section-title fade-in">What's coming next.</h2>
+  <div class="placeholder-grid">
+    <div class="placeholder-card fade-in">
+      <div class="ph-icon">🎙</div>
+      <div class="ph-title">Founders Fireside</div>
+      <div class="ph-desc">Interview series featuring Seattle founders — from outreach and scheduling to content design and narrative structuring.</div>
+      <div class="ph-tag">In Progress · Lavin Program</div>
+    </div>
+    <div class="placeholder-card fade-in fade-in-delay-1">
+      <div class="ph-icon">🔬</div>
+      <div class="ph-title">Pulse Oximeter Equity Research</div>
+      <div class="ph-desc">UX Health Co:Lab project investigating racial bias in medical devices — designing equitable, cost-effective solutions with a team of 10.</div>
+      <div class="ph-tag">In Progress · UW</div>
+    </div>
+    <div class="placeholder-card fade-in fade-in-delay-2">
+      <div class="ph-icon">✦</div>
+      <div class="ph-title">More Projects Coming</div>
+      <div class="ph-desc">Portfolio is actively growing. Reach out if you'd like to see writing samples, design artifacts, or case studies in progress.</div>
+      <div class="ph-tag">Get in Touch</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-label">Let's Connect</div>
+  <h2 class="section-title fade-in">Every great project<br/>starts with a conversation.</h2>
+  <p class="contact-sub fade-in fade-in-delay-1">I'm currently seeking summer 2026 internship opportunities in content design, UX writing, and product design. Let's make something meaningful.</p>
+  <div class="contact-links fade-in fade-in-delay-2">
+    <a href="mailto:anushasu@uw.edu" class="contact-link primary">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12v8H1V3zm0 0l6 5 6-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Email Me
+    </a>
+    <a href="https://linkedin.com/in/anusha-upadhyayula/" target="_blank" class="contact-link">
+      LinkedIn
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://www.facesbehindthenumbers.com" target="_blank" class="contact-link">
+      FBTN Site
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Anusha Upadhyayula</span>
+  <span>Informatics & Economics · University of Washington</span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 60);
+  });
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Trigger hero animations immediately
+  setTimeout(() => {
+    document.querySelectorAll('.hero .fade-in').forEach(el => el.classList.add('visible'));
+  }, 100);
+</script>
+</body>
+</html>
